@@ -1,0 +1,28 @@
+import numpy as np
+from scipy.sparse import csc_matrix
+from fractions import Fraction
+def float_format(vector,decimal):
+   return np.round((vector).astype(np.float),decimals=decimal)
+G=np.matrix([[1,1,0],
+   [1,0,1],
+   [0,1,0]])
+n=len(G)
+print(n)
+M=csc_matrix(G,dtype=np.float)
+rsums=np.array(M.sum(1))[:,0]
+ri,ci=M.nonzero()
+M.data/rsums[ri]
+dp=Fraction(1,n)
+E=np.zeros((3,3))
+E[:]=dp
+beta=0.85
+A=beta*M+((1-beta)*E)
+r=np.matrix([dp,dp,dp])
+r=np.transpose(r)
+previous_r=r
+for it in range(1,30):
+    r=A*r
+    if(previous_r==r).all():
+       break
+    previous_r=r
+    print("Final:\n",float_format(r,3))
